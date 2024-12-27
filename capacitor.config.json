@@ -1,0 +1,8 @@
+{
+  "appId": "com.agbeauty.app",
+  "appName": "AG Beauty",
+  "webDir": "out",
+  "server": {
+    "androidScheme": "https"
+  }
+}

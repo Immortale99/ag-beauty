@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ReferralCode {
+  id         String   @id @default(uuid())
+  code       String   @unique
+  userId     String
+  user       User     @relation("UserReferralCodes", fields: [userId], references: [id])
+  usedBy     User[]   @relation("UsedReferralCodes")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model User {
+  id            String        @id @default(cuid())
+  name          String?
+  email         String        @unique
+  password      String
+  points        Int           @default(0)
+  pointsHistory Json[]
+  earnedRewards Json[]        @default([])
+  tier          String        @default("BRONZE")
+  appointments  Appointment[]
+  rewards       Reward[]
+  favorites     Service[]     @relation("ServiceToUser")
+  referralCodes       ReferralCode[]  @relation("UserReferralCodes")
+  referralCodesUsed   ReferralCode[]  @relation("UsedReferralCodes")
+  referredBy          String?
+  usedGiftCards     GiftCard[] @relation("UsedGiftCards")
+  purchasedGiftCards GiftCard[] @relation("PurchasedGiftCards")
+  notifications Notification[]
+  reviews      Review[]    @relation("UserReviews")
+}
+
+
+model Appointment {
+  id                  String   @id @default(cuid())
+  date                DateTime
+  userId              String
+  serviceId           String
+  status              String   @default("pending")
+  createdAt           DateTime @default(now())
+  reminderSent24h     Boolean  @default(false)
+  reminderSentSameDay Boolean  @default(false)
+  service             Service  @relation(fields: [serviceId], references: [id])
+  user                User     @relation(fields: [userId], references: [id])
+}
+
+model Service {
+  id           String        @id @default(cuid())
+  name         String
+  price        Float
+  duration     Int
+  description  String?
+  appointments Appointment[]
+  users        User[]        @relation("ServiceToUser")
+}
+
+model RewardTemplate {
+  id              String   @id @default(cuid())
+  name            String
+  description     String
+  pointsRequired  Int
+  type            String
+  value           Float
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  redeemedRewards Reward[]
+}
+
+model Reward {
+  id         String          @id @default(cuid())
+  userId     String
+  templateId String?
+  points     Int
+  type       String
+  reason     String
+  status     String          @default("active")
+  createdAt  DateTime        @default(now())
+  usedAt     DateTime?
+  template   RewardTemplate? @relation(fields: [templateId], references: [id])
+  user       User            @relation(fields: [userId], references: [id])
+}
+
+model BlogPost {
+  id         String     @id @default(cuid())
+  title      String
+  content    String
+  image      String?
+  slug       String     @unique
+  excerpt    String?
+  published  Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  categories Category[] @relation("BlogPostToCategory")
+}
+
+model Category {
+  id    String     @id @default(cuid())
+  name  String     @unique
+  posts BlogPost[] @relation("BlogPostToCategory")
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  user      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[]
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  sender         String
+  timestamp      DateTime     @default(now())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model GalleryCategory {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  images    Image[]
+}
+
+model Image {
+  id         String           @id @default(cuid())
+  url        String
+  name       String
+  categoryId String?
+  createdAt  DateTime         @default(now())
+  category   GalleryCategory? @relation(fields: [categoryId], references: [id])
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  url         String
+  category    String
+  price       Float
+  description String?
+  createdAt   DateTime @default(now())
+}
+model GiftCard {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  amount      Float
+  isUsed      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  usedAt      DateTime?
+  usedBy      String?   // ID de l'utilisateur qui a utilisé la carte
+  purchasedBy String?   // ID de l'utilisateur qui a acheté la carte
+  user        User?     @relation("UsedGiftCards", fields: [usedBy], references: [id])
+  purchaser   User?     @relation("PurchasedGiftCards", fields: [purchasedBy], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   // 'POINTS', 'BLOG', 'PROMO', 'LEVEL_UP'
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("UserReviews", fields: [userId], references: [id])
+  rating    Int      @default(5)
+  comment   String
+  createdAt DateTime @default(now())
+}
