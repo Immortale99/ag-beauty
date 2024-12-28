@@ -48,6 +48,7 @@ export default function GalleryAdmin() {
   
       if (!res.ok) throw new Error('Erreur lors de la suppression');
       
+      // La suppression se fera maintenant à la fois dans la base de données et sur Cloudinary
       setImages(prev => prev.filter(img => img.id !== imageId));
     } catch (error) {
       setError('Erreur lors de la suppression de l\'image');
@@ -113,28 +114,33 @@ export default function GalleryAdmin() {
 
   const handleUpload = async () => {
     if (!selectedImage || !newImage.price) return;
-
+  
     setLoading(true);
     const formData = new FormData();
     formData.append('image', selectedImage.file);
     formData.append('category', newImage.category);
     formData.append('price', newImage.price);
     formData.append('description', newImage.description);
-
+  
     try {
       const res = await fetch('/api/gallery/upload', {
         method: 'POST',
         body: formData
       });
-
-      if (!res.ok) throw new Error('Erreur upload');
-
+  
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Erreur upload');
+      }
+  
       const data = await res.json();
+      // L'URL sera maintenant une URL Cloudinary
       setImages(prev => [data.image, ...prev]);
       setSelectedImage(null);
       setNewImage({ category: categories[0], price: '', description: '' });
     } catch (error) {
       console.error('Upload error:', error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
