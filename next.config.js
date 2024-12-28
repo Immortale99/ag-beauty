@@ -5,14 +5,12 @@ const nextConfig = {
     NEXT_PUBLIC_VAPID_PUBLIC_KEY: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
   },
   images: {
+    unoptimized: true, // Ajout de cette ligne pour le support mobile
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'picsum.photos',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.vercel.app',
+        hostname: '*',  // Permet tous les domaines
+        pathname: '**',
       }
     ],
   },

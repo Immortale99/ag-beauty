@@ -1,43 +1,45 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
+  relationMode = "prisma"
 }
 
 model ReferralCode {
-  id         String   @id @default(uuid())
-  code       String   @unique
-  userId     String
-  user       User     @relation("UserReferralCodes", fields: [userId], references: [id])
-  usedBy     User[]   @relation("UsedReferralCodes")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  code      String   @unique
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation("UserReferralCodes", fields: [userId], references: [id])
+  usedBy    User[]   @relation("UsedReferralCodes")
 }
 
 model User {
-  id            String        @id @default(cuid())
-  name          String?
-  email         String        @unique
-  password      String
-  points        Int           @default(0)
-  pointsHistory Json[]
-  earnedRewards Json[]        @default([])
-  tier          String        @default("BRONZE")
-  appointments  Appointment[]
-  rewards       Reward[]
-  favorites     Service[]     @relation("ServiceToUser")
-  referralCodes       ReferralCode[]  @relation("UserReferralCodes")
-  referralCodesUsed   ReferralCode[]  @relation("UsedReferralCodes")
-  referredBy          String?
-  usedGiftCards     GiftCard[] @relation("UsedGiftCards")
-  purchasedGiftCards GiftCard[] @relation("PurchasedGiftCards")
-  notifications Notification[]
-  reviews      Review[]    @relation("UserReviews")
+  id                 String         @id @default(cuid())
+  name               String?
+  email              String         @unique
+  password           String
+  points             Int            @default(0)
+  pointsHistory      Json[]
+  earnedRewards      Json[]         @default([])
+  tier               String         @default("BRONZE")
+  referredBy         String?
+  appointments       Appointment[]
+  purchasedGiftCards GiftCard[]     @relation("PurchasedGiftCards")
+  usedGiftCards      GiftCard[]     @relation("UsedGiftCards")
+  notifications      Notification[]
+  referralCodes      ReferralCode[] @relation("UserReferralCodes")
+  reviews            Review[]       @relation("UserReviews")
+  rewards            Reward[]
+  favorites          Service[]      @relation("ServiceToUser")
+  referralCodesUsed  ReferralCode[] @relation("UsedReferralCodes")
 }
-
 
 model Appointment {
   id                  String   @id @default(cuid())
@@ -149,6 +151,7 @@ model GalleryImage {
   description String?
   createdAt   DateTime @default(now())
 }
+
 model GiftCard {
   id          String    @id @default(cuid())
   code        String    @unique
@@ -157,10 +160,10 @@ model GiftCard {
   createdAt   DateTime  @default(now())
   expiresAt   DateTime?
   usedAt      DateTime?
-  usedBy      String?   // ID de l'utilisateur qui a utilisé la carte
-  purchasedBy String?   // ID de l'utilisateur qui a acheté la carte
-  user        User?     @relation("UsedGiftCards", fields: [usedBy], references: [id])
+  usedBy      String?
+  purchasedBy String?
   purchaser   User?     @relation("PurchasedGiftCards", fields: [purchasedBy], references: [id])
+  user        User?     @relation("UsedGiftCards", fields: [usedBy], references: [id])
 }
 
 model Notification {
@@ -168,16 +171,17 @@ model Notification {
   userId    String
   title     String
   message   String
-  type      String   // 'POINTS', 'BLOG', 'PROMO', 'LEVEL_UP'
+  type      String
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
 }
+
 model Review {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation("UserReviews", fields: [userId], references: [id])
   rating    Int      @default(5)
   comment   String
   createdAt DateTime @default(now())
+  user      User     @relation("UserReviews", fields: [userId], references: [id])
 }
