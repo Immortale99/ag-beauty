@@ -44,12 +44,11 @@ export default function PointsAdmin() {
           reason,
         })
       });
-
+  
       if (res.ok) {
         alert('Points ajoutés avec succès');
-        loadUsers(); // Recharger la liste
-        setPointsToAdd('');
-        setReason('');
+        // Redirection vers l'accueil après succès
+        router.push('/');
       }
     } catch (error) {
       alert('Erreur lors de l\'ajout des points');
