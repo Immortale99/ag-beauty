@@ -3,46 +3,36 @@ import { useAuth } from '../hooks/useAuth';
 import { Star, Heart } from 'lucide-react';
 import LoyaltySystem from './loyalty/LoyaltySystem';
 
-
 export default function Profile() {
   const { user, isLoading: authLoading } = useAuth();
-  const [profile, setProfile] = useState(null);
   const [points, setPoints] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    loadProfile();
-  }, []);
+    if (user) {
+      loadProfileData();
+    }
+  }, [user]);
 
-  const loadProfile = async () => {
+  const loadProfileData = async () => {
     try {
+      setLoading(true);
       const res = await fetch('/api/user/profile');
-      if (!res.ok) throw new Error('Erreur de chargement');
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Erreur serveur');
+      }
+
       const data = await res.json();
-      setProfile(data);
       setPoints(data.points || 0);
+      setError(null);
     } catch (error) {
-      setError('Erreur de chargement du profil');
+      console.error("Profile error:", error);
+      setError(error.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const updateProfile = async (updates) => {
-    setUpdating(true);
-    try {
-      const { error } = await supabase
-        .from('users')
-        .update(updates)
-        .eq('id', user.id);
-
-      if (error) throw error;
-      setProfile(prev => ({ ...prev, ...updates }));
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    } finally {
-      setUpdating(false);
     }
   };
 

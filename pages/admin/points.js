@@ -33,20 +33,26 @@ export default function PointsAdmin() {
     }
   };
 
-  const handleAddPoints = async (userId, amount, reason) => {
+  const handleAddPoints = async (e) => {
+    e.preventDefault();
     try {
-      const result = await pointsService.handlePoints(
-        userId,
-        amount,
-        reason
-      );
-      
-      // Mise à jour de l'interface après l'ajout des points
-      console.log('Nouveaux points:', result.points);
-      console.log('Nouveau tier:', result.tier);
-      
+      const res = await fetch(`/api/admin/points/${selectedUser.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          points: parseInt(pointsToAdd),
+          reason,
+        })
+      });
+
+      if (res.ok) {
+        alert('Points ajoutés avec succès');
+        loadUsers(); // Recharger la liste
+        setPointsToAdd('');
+        setReason('');
+      }
     } catch (error) {
-      console.error('Erreur:', error);
+      alert('Erreur lors de l\'ajout des points');
     }
   };
 
@@ -54,6 +60,14 @@ export default function PointsAdmin() {
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (!user || user.email !== 'info@repair-smartphone.fr') {
+    return (
+      <div className="p-8 text-center">
+        <p>Accès non autorisé</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
