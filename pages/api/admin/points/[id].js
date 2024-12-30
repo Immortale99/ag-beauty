@@ -29,57 +29,62 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      console.log('Traitement de la requête POST');
-      const { points, reason } = req.body;
-      
-      if (!points || !reason) {
-        console.log('Données manquantes:', { points, reason });
-        return res.status(400).json({ error: 'Points et raison requis' });
-      }
-
-      const pointsNumber = parseInt(points);
-      if (isNaN(pointsNumber)) {
-        console.log('Points invalides:', points);
-        return res.status(400).json({ error: 'Points invalides' });
-      }
-
-      console.log('Mise à jour des points:', { points: pointsNumber, reason });
-      
-      const updatedUser = await prisma.user.update({
-        where: { id },
-        data: {
-          points: { increment: pointsNumber },
-          pointsHistory: {
-            push: {
-              points: pointsNumber,
-              reason,
-              date: new Date().toISOString()
-            }
-          }
-        },
-        select: {
-          id: true,
-          email: true,
-          points: true,
-          pointsHistory: true
+        console.log('===== DÉBUT TRAITEMENT POST =====');
+        console.log('Headers reçus:', req.headers);
+        const { points, reason } = req.body;
+        console.log('Body reçu:', req.body);
+        
+        if (!points || !reason) {
+            console.log('❌ Données manquantes:', { points, reason });
+            return res.status(400).json({ error: 'Points et raison requis' });
         }
-      });
 
-      console.log('Utilisateur mis à jour:', {
-        id: updatedUser.id,
-        points: updatedUser.points
-      });
+        const pointsNumber = parseInt(points);
+        if (isNaN(pointsNumber)) {
+            console.log('❌ Points invalides:', points);
+            return res.status(400).json({ error: 'Points invalides' });
+        }
 
-      return res.status(200).json(updatedUser);
+        console.log('🎯 Mise à jour des points:', { points: pointsNumber, reason });
+        
+        const updatedUser = await prisma.user.update({
+            where: { id },
+            data: {
+                points: { increment: pointsNumber },
+                pointsHistory: {
+                    push: {
+                        points: pointsNumber,
+                        reason,
+                        date: new Date().toISOString()
+                    }
+                }
+            },
+            select: {
+                id: true,
+                email: true,
+                points: true,
+                pointsHistory: true
+            }
+        });
+
+        console.log('✅ Utilisateur mis à jour:', {
+            id: updatedUser.id,
+            points: updatedUser.points,
+            timestamp: new Date().toISOString()
+        });
+
+        return res.status(200).json(updatedUser);
     } catch (error) {
-      console.error('Erreur détaillée:', error);
-      return res.status(500).json({ 
-        error: 'Erreur serveur', 
-        details: error.message 
-      });
+        console.error('❌ ERREUR:', {
+            message: error.message,
+            stack: error.stack,
+            timestamp: new Date().toISOString()
+        });
+        return res.status(500).json({ 
+            error: 'Erreur serveur', 
+            details: error.message 
+        });
     }
-  }
-
-  console.log('Méthode non autorisée:', req.method);
-  return res.status(405).json({ error: 'Method not allowed' });
+}
+return res.status(405).json({ error: 'Method not allowed' });
 }
