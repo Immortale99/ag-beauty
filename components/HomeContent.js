@@ -17,15 +17,18 @@ export default function HomeContent() {
   const [showAllServices, setShowAllServices] = useState(false);
 
   const mainServices = [
-    { name: 'Pose complète', prix: '45€', duree: '2h15' },
-    { name: 'Remplissage', prix: '35€', duree: '2h' },
-    { name: 'Nail art', prix: '15€', duree: '30min' },
+    { name: 'Pose complète couleur', prix: '45€', duree: '2h15' },
+    { name: 'Remplissage 3 semaines', prix: '35€', duree: '2h' },
+    { name: 'Remplissage 3 semaines French / Babyboomer', prix: '40€', duree: '2h' },
   ];
 
   const additionalServices = [
-    { name: 'Dépose', prix: '20€', duree: '30min' },
+    { name: 'Dépose gel', prix: '20€', duree: '30min' },
     { name: 'Pose complète Baby Boomer', prix: '50€', duree: '2h' },
-    { name: 'Réparation ongle', prix: '5€', duree: '15min' },
+    { name: 'Limage Ongles', prix: '8€', duree: '15min' },
+    { name: 'Dépose gel extérieur', prix: '25€', duree: '35min' },
+    { name: 'Pose complète Baby Boomer', prix: '50€', duree: '2h' },
+    { name: 'Réparation ongle cassé', prix: '5€', duree: '15min' }
     // Ajoutez d'autres services ici
   ];
 
@@ -67,9 +70,9 @@ export default function HomeContent() {
         </div>
       </div>
 
-      <section>
+       <section>
         <h2 className="text-2xl font-bold mb-4">Nos services</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {mainServices.map((service, index) => (
             <TouchCard key={index}
                className="bg-white p-6 rounded-lg shadow-sm">
@@ -110,7 +113,7 @@ export default function HomeContent() {
                   <h3 className="font-bold text-lg mb-2">{service.name}</h3>
                   <p className="text-pink-500 font-bold text-xl">{service.prix}</p>
                   <p className="text-gray-500 text-sm">Durée : {service.duree}</p>
-                </div>
+                </div> 
               ))}
             </motion.div>
           )}
