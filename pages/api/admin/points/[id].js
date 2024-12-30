@@ -4,9 +4,11 @@ import { parseCookies } from 'nookies';
 
 export default async function handler(req, res) {
   console.log('Route admin points appelée');
+  console.log('====== DEBUG COOKIES ======');
 
   // Vérification de l'authentification admin
   const cookies = parseCookies({ req });
+  console.log('Tous les cookies:', cookies);
   const userCookie = cookies.user;
 
   console.log('Vérification authentification...');
