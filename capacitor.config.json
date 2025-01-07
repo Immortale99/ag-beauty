@@ -2,7 +2,7 @@
   "appId": "com.agbeauty.app",
   "appName": "AG Beauty",
   "server": {
-    "url": "https://ag-beauty.onrender.com",
+    "url": "https://ag-beauty.netlify.app",
     "androidScheme": "https",
     "cleartext": true
   }
