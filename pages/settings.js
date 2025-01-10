@@ -1,4 +1,4 @@
-// pages/settings.js
+/*// pages/settings.js
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import Link from 'next/link';
@@ -51,8 +51,8 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="fixed top-0 left-0 right-0 bg-white shadow-sm z-10">
+      {/* Header *//*}
+      /*<div className="fixed top-0 left-0 right-0 bg-white shadow-sm z-10">
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="text-gray-600 hover:text-gray-900">
@@ -63,10 +63,10 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-lg mx-auto px-4 pt-20 pb-8">
-        {/* Profil rapide */}
-        <div className="bg-white rounded-lg shadow p-4 mb-6">
+      {/* Content *//*}
+      /*<div className="max-w-lg mx-auto px-4 pt-20 pb-8">
+        {/* Profil rapide *//*}
+        /*<div className="bg-white rounded-lg shadow p-4 mb-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
               <User size={32} className="text-gray-500" />
@@ -80,8 +80,8 @@ export default function Settings() {
           </div>
         </div>
 
-        {/* Sections de paramètres */}
-        <div className="space-y-4">
+        {/* Sections de paramètres *//*}
+        /*<div className="space-y-4">
           {settingsSections.map((section) => {
             const IconComponent = section.icon;
             return (
@@ -103,8 +103,8 @@ export default function Settings() {
           })}
         </div>
 
-        {/* Bouton de déconnexion */}
-        <button
+        {/* Bouton de déconnexion *//*}
+        /*<button
           onClick={logout}
           className="mt-8 w-full flex items-center justify-center gap-2 p-4 text-red-500 bg-white rounded-lg shadow hover:bg-red-50 transition-colors"
         >
@@ -112,6 +112,6 @@ export default function Settings() {
           <span>Se déconnecter</span>
         </button>
       </div>
-    </div>
-  );
-}
+    </div>*/
+/*);
+/*}*/

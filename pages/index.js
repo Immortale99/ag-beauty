@@ -74,9 +74,6 @@ export default function AGBeauty() {
                 <a href="tel:+33626028745" className="text-gray-500 hover:text-pink-500">
                   <Phone size={20} />
                 </a>
-                <a href="/settings" className="text-gray-500 hover:text-pink-500">
-                  <Settings size={24} className="text-gray-600"/>
-                </a>
                 {user ? (
                   <button
                     onClick={logout}
