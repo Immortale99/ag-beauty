@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { Star, Heart } from 'lucide-react';
 import LoyaltySystem from './loyalty/LoyaltySystem';
 
+
 export default function Profile() {
   const { user, isLoading: authLoading } = useAuth();
   const [points, setPoints] = useState(0);
@@ -75,14 +76,13 @@ export default function Profile() {
           <div className="flex justify-between items-start">
             <div>
               <h3 className="font-bold text-lg mb-2">Carte de fidélité</h3>
-              <p className="text-sm opacity-120">{user.name}</p>
               <p className="text-sm opacity-120">{user.email}</p>
             </div>
             <Star size={24} />
           </div>
           <div className="mt-6">
             <p className="text-2xl font-bold">{points} points</p>
-            <p className="text-sm opacity-90">Prochain cadeau à 200 points</p>
+            <p className="text-sm opacity-90">{user.name}</p>
           </div>
         </div>
 

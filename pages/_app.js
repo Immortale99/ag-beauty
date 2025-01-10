@@ -3,8 +3,6 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router';
 import '../styles/globals.css'
 import Head from 'next/head'
-import WhatsAppButton from '../components/contact/WhatsAppButton';
-import SocialButtons from '../components/contact/SocialButtons';
 import { ToastProvider } from '../contexts/ToastContext';
 
 
@@ -27,8 +25,6 @@ export default function MyApp({ Component, pageProps }) {
           <Component {...pageProps} user={user} />
           {!router.pathname.startsWith('/admin') && (
             <>
-              <WhatsAppButton />
-              <SocialButtons />
             </>
           )}
         </>

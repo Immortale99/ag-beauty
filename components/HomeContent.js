@@ -56,7 +56,8 @@ export default function HomeContent() {
     <div className="space-y-6">
       <div className="relative h-64 rounded-xl overflow-hidden">
         <Image
-          src="https://picsum.photos/1200/400"
+          /*src="https://picsum.photos/1200/400"*/
+          src="https://res.cloudinary.com/dfjrs0yvm/image/upload/w_1000,ar_16:9,c_fill,g_auto,e_sharpen/v1736263459/1092653464036485024_bvmjn7.png"
           alt="AG - BEAUTY Banner"
           className="w-full h-full object-cover"
           width={1200}
